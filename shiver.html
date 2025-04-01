@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Shivering Text</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'JetBrains Mono', monospace;
+      background-color: #111;
+      color: #0f0;
+      padding: 20px;
+    }
+
+    a {
+      color: #0f0;
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    h1 {
+      font-size: 1.5em;
+    }
+
+    .sentence {
+      font-size: 1.2em;
+    }
+
+    .shiver {
+      display: inline-block;
+      animation: shiver 0.05s infinite alternate;
+      transform: translate(var(--jump-x, 0), var(--jump-y, 0));
+    }
+
+    @keyframes shiver {
+      0%   { transform: translate(var(--jump-x, 0), var(--jump-y, 0)) translateX(0); }
+      100% { transform: translate(var(--jump-x, 0), var(--jump-y, 0)) translateX(-2px); }
+    }
+  </style>
+</head>
+<body>
+  <a href="index.html">&larr; Back to Index</a>
+
+  <h1>Shivering Text</h1>
+  <small>*Watch it for a few seconds.</small>
+  <p class="sentence">
+    The anatomy of the <span class="shiver" id="shiverWord">subject</span> is abnormal.
+  </p>
+
+  <script>
+    const shiver = document.getElementById('shiverWord');
+
+    function triggerBigJump() {
+      const x = (Math.random() * 20 - 10).toFixed(1) + 'px';
+      const y = (Math.random() * 20 - 10).toFixed(1) + 'px';
+
+      shiver.style.setProperty('--jump-x', x);
+      shiver.style.setProperty('--jump-y', y);
+
+      setTimeout(() => {
+        shiver.style.setProperty('--jump-x', '0px');
+        shiver.style.setProperty('--jump-y', '0px');
+      }, 80);
+    }
+
+    function scheduleNextJump() {
+      const next = Math.random() * 3000 + 2000;
+      setTimeout(() => {
+        triggerBigJump();
+        scheduleNextJump();
+      }, next);
+    }
+
+    scheduleNextJump();
+  </script>
+</body>
+</html>

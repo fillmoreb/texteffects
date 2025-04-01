@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Organic Glitch Text</title>
+
+  <!-- JetBrains Mono via CDN -->
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono&display=swap" rel="stylesheet">
+
+  <style>
+    body {
+      font-family: 'JetBrains Mono', monospace;
+      background-color: #111;
+      color: #eee;
+      padding: 20px;
+    }
+    input, label {
+      font-family: inherit;
+      font-size: 16px;
+    }
+    .preview {
+      font-family: 'JetBrains Mono', monospace;
+      white-space: pre-wrap;
+      background-color: #000;
+      color: #0f0;
+      padding: 1em;
+      margin-top: 20px;
+      border: 1px solid #333;
+      min-height: 3em;
+    }
+    label {
+      display: block;
+      margin-top: 1em;
+    }
+  </style>
+</head>
+<body>
+  <a href="index.html" style="color: #0f0; text-decoration: none; font-family: 'JetBrains Mono', monospace;">&larr; Back to Index</a>
+
+  <h1>Organic Glitch Text</h1>
+
+  <label>
+    Enter Text:
+    <input type="text" id="inputText" value="More pancake for me">
+  </label>
+
+  <div class="preview" id="preview"></div>
+
+  <script>
+    const inputText = document.getElementById('inputText');
+    const preview = document.getElementById('preview');
+
+    const zalgoUp = ['\u0300', '\u0301', '\u0302', '\u0303', '\u0304', '\u0305', '\u0306', '\u0308'];
+    const zalgoMid = ['\u0334', '\u0335', '\u0336', '\u034f'];
+    const zalgoDown = ['\u0323', '\u0324', '\u0325', '\u0326', '\u0327', '\u0328', '\u0339'];
+
+    const corruptMap = {
+      'A': 'Ⱥ', 'E': 'Σ', 'I': 'Ӏ', 'O': 'Ø', 'U': '⋃',
+      'a': 'α', 'e': 'є', 'i': 'ı', 'o': 'ɵ', 'u': 'ʉ',
+      'c': 'ç', 'd': 'đ', 'n': 'п', 't': '†', 's': 'ʂ',
+      'l': 'ł', 'y': 'ʎ', 'r': 'г'
+    };
+
+    let glitchState = [];
+
+    function randomFrom(arr) {
+      return arr[Math.floor(Math.random() * arr.length)];
+    }
+
+    function maybeCorruptChar(char) {
+      return (Math.random() < 0.05 && corruptMap[char]) ? corruptMap[char] : char;
+    }
+
+    function updateGlitchState(textLength) {
+      // Reinitialize if text length changed
+      if (glitchState.length !== textLength) {
+        glitchState = Array.from({ length: textLength }, () =>
+          [0, 0, 0] // [top, mid, bottom]
+        );
+      }
+
+      const maxIntensities = [5,2,5]
+
+      // Update each intensity component randomly
+      for (let i = 0; i < glitchState.length; i++) {
+        for (let j = 0; j < 3; j++) {
+          const r = Math.random();
+          if (r < 0.33) glitchState[i][j] = Math.min(maxIntensities[j], glitchState[i][j] + 1);
+          else if (r < 0.66) glitchState[i][j] = Math.max(0, glitchState[i][j] - 1);
+          // else do nothing (stay the same)
+        }
+      }
+    }
+
+    function renderGlitchText(baseText) {
+      return baseText.split('').map((char, i) => {
+        if (char === ' ') return char;
+
+        const [top, mid, bottom] = glitchState[i] || [0, 0, 0];
+        let corrupted = maybeCorruptChar(char);
+
+        for (let j = 0; j < top; j++) corrupted += randomFrom(zalgoUp);
+        for (let j = 0; j < mid; j++) corrupted += randomFrom(zalgoMid);
+        for (let j = 0; j < bottom; j++) corrupted += randomFrom(zalgoDown);
+
+        return corrupted;
+      }).join('');
+    }
+
+    function update() {
+      const base = inputText.value;
+      updateGlitchState(base.length);
+      preview.textContent = renderGlitchText(base);
+    }
+
+    inputText.addEventListener('input', () => {
+      glitchState = []; // Reset on text change
+      update();
+    });
+
+    window.addEventListener('load', () => {
+      update();
+      setInterval(update, 1000 / 5); // 5 times per second
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0" />
+  <title>Biostrata</title>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono&display=swap" rel="stylesheet">
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      background-color: #000;
+      color: #fff;
+      font-family: 'JetBrains Mono', monospace;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+    }
+
+    p {
+      margin: 0;
+      padding: 0;
+    }
+
+    .wrapper {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    #game-container {
+      width: 1280px;
+      height: 800px;
+      font-size: 16px;
+      box-sizing: border-box;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrapper">
+    <div id="game-container">
+      <p>
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus fringilla, turpis eget feugiat imperdiet, 
+        libero nulla dapibus erat, vitae pharetra orci turpis vel sapien. Fusce gravida justo non tortor ultricies, 
+        in posuere nunc malesuada.
+      </p>
+    </div>
+  </div>
+
+  <script>
+    function scaleToFit() {
+      const baseWidth = 1280;
+      const baseHeight = 800;
+      const scaleX = window.innerWidth / baseWidth;
+      const scaleY = window.innerHeight / baseHeight;
+      const scale = Math.min(scaleX, scaleY);
+
+      const container = document.getElementById('game-container');
+      container.style.transform = `scale(${scale})`;
+    }
+
+    window.addEventListener('resize', scaleToFit);
+    window.addEventListener('load', scaleToFit);
+  </script>
+</body>
+</html>
